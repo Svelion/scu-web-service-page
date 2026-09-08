@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyHub - 학생을 위한 스터디 모임 플랫폼</title>
+</head>
+<body>
+  <!--
+    [정보 설계]
+    사용자: 대학생, 시험 기간에 함께 공부할 동료를 찾는 학습자
+    목적: 같은 목표를 가진 학생들과 스터디 모임을 쉽게 만들고 참여한다
+    핵심 행동: 스터디 검색 - 상세 확인 - 참여 신청
+    정보 순서: 서비스 소개 - 주요 기능 - 이용 방법 - 참여 신청
+  -->
+
+  <header>
+    <h1>StudyHub</h1>
+    <p>학생을 위한 스터디 모임 플랫폼</p>
+    <nav>
+      <a href="#intro">서비스 소개</a>
+      <a href="#features">주요 기능</a>
+      <a href="#howto">이용 방법</a>
+      <a href="#join">참여 신청</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="intro">
+      <h2>서비스 소개</h2>
+      <p>
+        StudyHub는 혼자 공부가 막막한 학생들을 위한 스터디 모임 플랫폼입니다.
+        관심 과목과 목표를 입력하면 나와 같은 과목을 준비하는 학생들과
+        스터디 모임을 만들고 운영할 수 있습니다.
+      </p>
+    </section>
+
+    <section id="features">
+      <h2>주요 기능</h2>
+      <ul>
+        <li><strong>스터디 검색:</strong> 과목, 학교, 지역별로 원하는 스터디를 찾아보세요.</li>
+        <li><strong>모임 개설:</strong> 목표와 일정을 정해서 나만의 스터디 모임을 만드세요.</li>
+        <li><strong>출석 체크:</strong> 모임 참석을 기록하고 꾸준함을 확인하세요.</li>
+      </ul>
+    </section>
+
+    <section id="howto">
+      <h2>이용 방법</h2>
+      <ol>
+        <li>회원가입 후 학교와 관심 과목을 등록합니다.</li>
+        <li>스터디를 검색하거나 새로운 모임을 개설합니다.</li>
+        <li>참여 신청 후 일정에 맞춰 함께 공부합니다.</li>
+      </ol>
+    </section>
+
+    <section id="image">
+      <h2>스터디 현장</h2>
+      <img src="https://placehold.co/600x300?text=StudyHub+Study+Room" alt="StudyHub 스터디룸에서 함께 공부하는 학생들의 모습">
+    </section>
+
+    <section id="join">
+      <h2>참여 신청</h2>
+      <form>
+        <label for="student-name">이름</label>
+        <input type="text" id="student-name" name="student-name">
+
+        <label for="student-email">학교 이메일</label>
+        <input type="email" id="student-email" name="student-email">
+
+        <button type="submit">스터디 참여 신청하기</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p><a href="#intro">맨 위로</a> | StudyHub 2026 서울사이버대학교 UI/UX프로그래밍 실습</p>
+  </footer>
+</body>
+</html>
