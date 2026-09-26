@@ -1,0 +1,162 @@
+/* ===== 3주차: CSS로 웹페이지 디자인하기 ===== */
+
+/* 기본 설정 */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  background-color: #f3f5f9;
+  color: #2c2c34;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* 헤더 영역 */
+header {
+  background-color: #1e40af;
+  color: #ffffff;
+  padding: 32px 24px 24px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: 1px;
+}
+
+header > p {
+  margin: 8px 0 16px;
+  font-size: 15px;
+  color: #c7d4f5;
+}
+
+/* 내비게이션 */
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  padding: 6px 12px;
+  border: 1px solid #93b4f5;
+  border-radius: 20px;
+}
+
+nav a:hover {
+  background-color: #3b5fd9;
+}
+
+/* 본문 섹션 공통 */
+main {
+  max-width: 900px;
+  margin: 32px auto;
+  padding: 0 16px;
+}
+
+section {
+  background-color: #ffffff;
+  border: 1px solid #dbe2f0;
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+}
+
+/* 제목과 본문 구분 */
+h2 {
+  color: #1e40af;
+  font-size: 24px;
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #dbe2f0;
+}
+
+p {
+  margin: 10px 0;
+}
+
+/* 주요 기능 강조 */
+#features li {
+  margin: 10px 0;
+}
+
+strong {
+  color: #1e40af;
+}
+
+/* 이용 방법 목록 */
+#howto ol {
+  padding-left: 22px;
+}
+
+#howto li {
+  margin: 8px 0;
+}
+
+/* 이미지 */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid #dbe2f0;
+}
+
+/* 참여 신청 폼 */
+form label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a5160;
+  margin: 14px 0 6px;
+}
+
+form input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 15px;
+  border: 1px solid #c3cddd;
+  border-radius: 8px;
+  background-color: #fafbfe;
+}
+
+form input:focus {
+  outline: 2px solid #3b5fd9;
+}
+
+form button {
+  margin-top: 18px;
+  background-color: #1e40af;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #3b5fd9;
+}
+
+/* 푸터 */
+footer {
+  background-color: #23263a;
+  color: #aab2c5;
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+}
+
+footer a {
+  color: #c7d4f5;
+  text-decoration: none;
+}
