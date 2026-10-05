@@ -175,6 +175,33 @@ form button:hover {
   background-color: #3b5fd9;
 }
 
+/* 제출 완료 후 버튼 상태 */
+form button.submitted {
+  background-color: #15803d;
+  cursor: default;
+}
+
+/* 안내 문구 스타일 */
+#join-message {
+  margin: 14px 0 0;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+#join-message.message-ok {
+  color: #166534;
+  background-color: #dcfce7;
+  border: 1px solid #86efac;
+}
+
+#join-message.message-warn {
+  color: #991b1b;
+  background-color: #fee2e2;
+  border: 1px solid #fca5a5;
+}
+
 /* 푸터 */
 footer {
   background-color: #23263a;
