@@ -292,3 +292,34 @@ if (btnRestart) {
     showCreateStep(1);
   });
 }
+
+/* ===== 6주차: 이벤트 처리와 동적 UI 구현 (스터디 가이드 탭) =====
+   [이벤트 구현]
+   - click  : 탭 버튼 클릭 시 선택 탭 전환 (문구·스타일·콘텐츠 동시 변경)
+   - input  : 참여 신청 폼 입력 시 이전 안내 상태 초기화 (5주차, 유지)
+   - change : 모임 개설의 과목 select, 요일 radio에서 선택값 저장 + 오류 해제 (7주차, 유지)
+   [화면 변화: 두 가지 이상 동시 변경]
+   - 탭 버튼: 활성 배경색/글자색 변경(스타일) + aria-selected 갱신
+   - 탭 콘텐츠: 선택한 탭만 표시(문구 교체), 나머지는 숨김
+*/
+
+const tabButtons = document.querySelectorAll(".tab-btn");
+const tabPanels = document.querySelectorAll(".tab-panel");
+
+tabButtons.forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    const targetId = btn.getAttribute("data-tab");
+
+    // 버튼 상태 변경: 선택된 탭만 active + aria-selected=true
+    tabButtons.forEach(function (b) {
+      const selected = b === btn;
+      b.classList.toggle("active", selected);
+      b.setAttribute("aria-selected", selected ? "true" : "false");
+    });
+
+    // 콘텐츠 전환: 선택된 탭의 패널만 표시
+    tabPanels.forEach(function (panel) {
+      panel.hidden = panel.id !== targetId;
+    });
+  });
+});

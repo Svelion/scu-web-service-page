@@ -12,8 +12,8 @@
     [정보 설계]
     사용자: 대학생, 시험 기간에 함께 공부할 동료를 찾는 학습자
     목적: 같은 목표를 가진 학생들과 스터디 모임을 쉽게 만들고 참여한다
-    핵심 행동: 스터디 검색 - 상세 확인 - 참여 신청 / 모임 개설 (7주차)
-    정보 순서: 서비스 소개 - 주요 기능 - 이용 방법 - 모임 개설 - 참여 신청
+    핵심 행동: 스터디 검색 - 상세 확인 - 참여 신청 / 모임 개설 (7주차) / 가이드 탭 전환 (6주차)
+    정보 순서: 서비스 소개 - 주요 기능 - 이용 방법 - 모임 개설 - 스터디 가이드 - 참여 신청
 
     [7주차 사용자 흐름: 스터디 모임 개설]
     사용자: 새 스터디 모임이 필요한 대학생
@@ -30,6 +30,7 @@
       <a href="#features">주요 기능</a>
       <a href="#howto">이용 방법</a>
       <a href="#create">모임 개설</a>
+      <a href="#tips">스터디 가이드</a>
       <a href="#join">참여 신청</a>
     </nav>
   </header>
@@ -183,6 +184,44 @@
         <div class="create-actions">
           <button type="button" id="btn-restart">다시 만들기</button>
         </div>
+      </div>
+    </section>
+
+    <!-- 6주차: 정보 전환 탭 UI -->
+    <section id="tips">
+      <h2>스터디 가이드</h2>
+      <p class="tips-intro">탭을 눌러 필요한 정보를 확인하세요.</p>
+      <div class="tab-list" role="tablist" aria-label="스터디 가이드 탭">
+        <button type="button" class="tab-btn active" data-tab="tab-search" id="tabbtn-search" role="tab" aria-selected="true">참여 팁</button>
+        <button type="button" class="tab-btn" data-tab="tab-guide" id="tabbtn-guide" role="tab" aria-selected="false">개설 가이드</button>
+        <button type="button" class="tab-btn" data-tab="tab-faq" id="tabbtn-faq" role="tab" aria-selected="false">자주 묻는 질문</button>
+      </div>
+
+      <div class="tab-panel" id="tab-search" role="tabpanel" aria-labelledby="tabbtn-search">
+        <h3>스터디 참여 팁</h3>
+        <ul>
+          <li>관심 과목으로 검색하면 나와 목표가 같은 모임을 빨리 찾을 수 있습니다.</li>
+          <li>모임 소개와 일정을 먼저 확인하고 참여 신청하세요.</li>
+          <li>첫 모임 전에 스터디 목표를 스스로 정해두면 꾸준해지기 쉽습니다.</li>
+        </ul>
+      </div>
+
+      <div class="tab-panel" id="tab-guide" role="tabpanel" aria-labelledby="tabbtn-guide" hidden>
+        <h3>모임 개설 가이드</h3>
+        <ul>
+          <li>모임 이름은 주제와 목표가 드러나게 지으면 참여율이 높아집니다.</li>
+          <li>모임 요일과 인원은 부담 없는 범위로 정하세요. (권장: 주 1회, 4~6명)</li>
+          <li>개설 후에는 매주 진행 내용을 간단히 기록하면 운영이 쉬워집니다.</li>
+        </ul>
+      </div>
+
+      <div class="tab-panel" id="tab-faq" role="tabpanel" aria-labelledby="tabbtn-faq" hidden>
+        <h3>자주 묻는 질문</h3>
+        <ul>
+          <li>Q. 모임 개설은 몇 개까지 가능한가요? A. 계정당 5개까지 개설할 수 있습니다.</li>
+          <li>Q. 참여 신청을 취소할 수 있나요? A. 모임 시작 하루 전까지 신청 목록에서 취소할 수 있습니다.</li>
+          <li>Q. 온라인 모임도 만들 수 있나요? A. 일정 선택 시 화상 링크를 추가하면 온라인 모임으로 운영됩니다.</li>
+        </ul>
       </div>
     </section>
 
