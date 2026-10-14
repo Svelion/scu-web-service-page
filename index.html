@@ -12,8 +12,14 @@
     [정보 설계]
     사용자: 대학생, 시험 기간에 함께 공부할 동료를 찾는 학습자
     목적: 같은 목표를 가진 학생들과 스터디 모임을 쉽게 만들고 참여한다
-    핵심 행동: 스터디 검색 - 상세 확인 - 참여 신청
-    정보 순서: 서비스 소개 - 주요 기능 - 이용 방법 - 참여 신청
+    핵심 행동: 스터디 검색 - 상세 확인 - 참여 신청 / 모임 개설 (7주차)
+    정보 순서: 서비스 소개 - 주요 기능 - 이용 방법 - 모임 개설 - 참여 신청
+
+    [7주차 사용자 흐름: 스터디 모임 개설]
+    사용자: 새 스터디 모임이 필요한 대학생
+    목표: 나만의 스터디 모임을 개설하는 것
+    완료 조건: 개설 완료 화면에 모임 이름과 정보가 표시된다
+    흐름: 시작 - 모임 정보 입력 - 일정 선택 - 확인 - 완료 (5단계)
   -->
 
   <header>
@@ -23,6 +29,7 @@
       <a href="#intro">서비스 소개</a>
       <a href="#features">주요 기능</a>
       <a href="#howto">이용 방법</a>
+      <a href="#create">모임 개설</a>
       <a href="#join">참여 신청</a>
     </nav>
   </header>
@@ -64,9 +71,119 @@
       </ol>
     </section>
 
-    <section id="image">
-      <h2>스터디 현장</h2>
-      <img src="https://placehold.co/600x300?text=StudyHub+Study+Room" alt="StudyHub 스터디룸에서 함께 공부하는 학생들의 모습">
+    <section id="create">
+      <h2>모임 개설</h2>
+      <p class="create-intro">
+        다섯 단계를 거쳐 나만의 스터디 모임을 개설하세요.
+        필수 항목을 모두 채우면 다음 단계로 이동합니다.
+      </p>
+
+      <!-- 진행 표시 -->
+      <ol class="create-steps" aria-label="개설 진행 단계">
+        <li data-step="1" class="active">시작</li>
+        <li data-step="2">정보 입력</li>
+        <li data-step="3">일정 선택</li>
+        <li data-step="4">확인</li>
+        <li data-step="5">완료</li>
+      </ol>
+
+      <!-- 1단계: 시작 -->
+      <div class="create-panel" id="create-step-1">
+        <h3>스터디 모임을 새로 만드시겠어요?</h3>
+        <p>
+          모임 이름과 소개를 입력하고, 모임 일정과 인원을 선택한 뒤
+          내용을 확인하고 개설을 확정하면 완료됩니다.
+        </p>
+        <button type="button" id="btn-create-start">모임 개설 시작하기</button>
+      </div>
+
+      <!-- 2단계: 모임 정보 입력 -->
+      <div class="create-panel" id="create-step-2" hidden>
+        <h3>1. 모임 정보 입력</h3>
+        <div class="create-field">
+          <label for="create-title">모임 이름 <span class="req">(필수)</span></label>
+          <input type="text" id="create-title" placeholder="예: 자료구조 기말 대비 스터디">
+          <p class="field-guide" id="guide-title" hidden>모임 이름을 입력해 주세요.</p>
+        </div>
+        <div class="create-field">
+          <label for="create-desc">한 줄 소개 <span class="req">(필수)</span></label>
+          <input type="text" id="create-desc" placeholder="예: 매주 문제 5개씩 풀고 서로 설명하는 모임">
+          <p class="field-guide" id="guide-desc" hidden>한 줄 소개를 입력해 주세요.</p>
+        </div>
+        <p class="create-error" id="error-step2" role="alert" hidden></p>
+        <div class="create-actions">
+          <button type="button" class="btn-back" data-back="1">이전</button>
+          <button type="button" id="btn-to-3">다음: 일정 선택</button>
+        </div>
+      </div>
+
+      <!-- 3단계: 일정 선택 -->
+      <div class="create-panel" id="create-step-3" hidden>
+        <h3>2. 일정 선택</h3>
+        <div class="create-field">
+          <label for="create-subject">주요 과목 <span class="req">(필수)</span></label>
+          <select id="create-subject">
+            <option value="">과목을 선택하세요</option>
+            <option value="자료구조">자료구조</option>
+            <option value="데이터베이스">데이터베이스</option>
+            <option value="UI/UX프로그래밍">UI/UX프로그래밍</option>
+            <option value="파이썬프로그래밍">파이썬프로그래밍</option>
+            <option value="기타">기타</option>
+          </select>
+          <p class="field-guide" id="guide-subject" hidden>주요 과목을 선택해 주세요.</p>
+        </div>
+        <div class="create-field">
+          <span class="create-label">모임 요일 <span class="req">(필수)</span></span>
+          <div class="day-group" role="radiogroup" aria-label="모임 요일">
+            <label><input type="radio" name="create-day" value="월"> 월</label>
+            <label><input type="radio" name="create-day" value="화"> 화</label>
+            <label><input type="radio" name="create-day" value="수"> 수</label>
+            <label><input type="radio" name="create-day" value="목"> 목</label>
+            <label><input type="radio" name="create-day" value="금"> 금</label>
+            <label><input type="radio" name="create-day" value="토"> 토</label>
+          </div>
+          <p class="field-guide" id="guide-day" hidden>모임 요일을 선택해 주세요.</p>
+        </div>
+        <div class="create-field">
+          <label for="create-capacity">모집 인원 (선택, 최대 10명)</label>
+          <input type="number" id="create-capacity" min="2" max="10" placeholder="예: 5">
+        </div>
+        <p class="create-error" id="error-step3" role="alert" hidden></p>
+        <div class="create-actions">
+          <button type="button" class="btn-back" data-back="2">이전</button>
+          <button type="button" id="btn-to-4">다음: 확인</button>
+        </div>
+      </div>
+
+      <!-- 4단계: 확인 -->
+      <div class="create-panel" id="create-step-4" hidden>
+        <h3>3. 입력 내용 확인</h3>
+        <dl class="create-summary" id="create-summary">
+          <div><dt>모임 이름</dt><dd id="sum-title">-</dd></div>
+          <div><dt>한 줄 소개</dt><dd id="sum-desc">-</dd></div>
+          <div><dt>주요 과목</dt><dd id="sum-subject">-</dd></div>
+          <div><dt>모임 요일</dt><dd id="sum-day">-</dd></div>
+          <div><dt>모집 인원</dt><dd id="sum-capacity">미정</dd></div>
+        </dl>
+        <p class="create-hint">잘못된 내용이 있으면 수정하기 버튼으로 돌아가서 고칠 수 있습니다.</p>
+        <div class="create-actions">
+          <button type="button" class="btn-back" data-back="3">수정하기</button>
+          <button type="button" id="btn-confirm">개설 확정</button>
+        </div>
+      </div>
+
+      <!-- 5단계: 완료 -->
+      <div class="create-panel create-done" id="create-step-5" hidden>
+        <h3>모임 개설이 완료되었습니다.</h3>
+        <p class="done-summary">
+          <strong id="done-title">-</strong> 모임이
+          <span id="done-detail">-</span> 일정으로 개설되었습니다.
+        </p>
+        <p>멤버가 모이면 모임 일정이 자동으로 캘린더에 등록됩니다.</p>
+        <div class="create-actions">
+          <button type="button" id="btn-restart">다시 만들기</button>
+        </div>
+      </div>
     </section>
 
     <section id="join">

@@ -266,3 +266,277 @@ footer a {
     font-size: 13px;
   }
 }
+
+/* ===== 7주차: 사용자 흐름과 인터랙션 시나리오 구현 (모임 개설 마법사) ===== */
+
+#create .create-intro {
+  font-size: 15px;
+  color: #4a5160;
+}
+
+/* 진행 표시 단계 */
+.create-steps {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 22px;
+}
+
+.create-steps li {
+  flex: 1;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #8a91a3;
+  background-color: #eef1f7;
+  border: 1px solid #dbe2f0;
+  border-radius: 20px;
+  padding: 7px 4px;
+}
+
+.create-steps li.active {
+  color: #ffffff;
+  background-color: #1e40af;
+  border-color: #1e40af;
+}
+
+.create-steps li.done {
+  color: #166534;
+  background-color: #dcfce7;
+  border-color: #86efac;
+}
+
+/* 단계 패널 */
+.create-panel {
+  border: 1px solid #dbe2f0;
+  border-radius: 10px;
+  padding: 20px 22px;
+  background-color: #f8faff;
+}
+
+.create-panel h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: #1e40af;
+}
+
+.create-field {
+  margin: 14px 0;
+}
+
+.create-field label,
+.create-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a5160;
+  margin-bottom: 6px;
+}
+
+.req {
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.create-field input,
+.create-field select {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 15px;
+  border: 1px solid #c3cddd;
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+.create-field input:focus,
+.create-field select:focus {
+  outline: 2px solid #3b5fd9;
+}
+
+/* 오류 상태 입력창 강조 */
+.field-error input,
+.field-error select,
+input.field-error,
+select.field-error {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+/* 필드별 안내 문구 */
+.field-guide {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #b91c1c;
+}
+
+/* 단계별 오류 안내 문구 */
+.create-error {
+  margin: 12px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #991b1b;
+  background-color: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+/* 요일 선택 버튼 그룹 */
+.day-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.day-group label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  border: 1px solid #c3cddd;
+  border-radius: 20px;
+  padding: 7px 14px;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
+.day-group label:has(input:checked) {
+  background-color: #1e40af;
+  color: #ffffff;
+  border-color: #1e40af;
+}
+
+/* 확인 화면 요약 */
+.create-summary {
+  margin: 0;
+}
+
+.create-summary > div {
+  display: flex;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px dashed #dbe2f0;
+}
+
+.create-summary dt {
+  width: 90px;
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #4a5160;
+}
+
+.create-summary dd {
+  margin: 0;
+  font-size: 15px;
+  color: #2c2c34;
+  word-break: break-word;
+}
+
+.create-hint {
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* 버튼 영역: 이전 / 다음 */
+.create-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.create-actions button {
+  font-size: 15px;
+  font-weight: 600;
+  padding: 11px 22px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-back {
+  background-color: #e5e9f2;
+  color: #4a5160;
+}
+
+.btn-back:hover {
+  background-color: #d6dce9;
+}
+
+#btn-create-start,
+#btn-to-3,
+#btn-to-4,
+#btn-confirm {
+  background-color: #1e40af;
+  color: #ffffff;
+}
+
+#btn-create-start:hover,
+#btn-to-3:hover,
+#btn-to-4:hover,
+#btn-confirm:hover {
+  background-color: #3b5fd9;
+}
+
+/* 완료 화면 */
+.create-done {
+  border-color: #86efac;
+  background-color: #f0fdf4;
+}
+
+.create-done h3 {
+  color: #15803d;
+}
+
+.done-summary {
+  font-size: 15px;
+}
+
+.done-summary strong {
+  font-size: 17px;
+}
+
+#btn-restart {
+  background-color: #15803d;
+  color: #ffffff;
+}
+
+#btn-restart:hover {
+  background-color: #166534;
+}
+
+/* 모바일 반응형 (768px 이하) */
+@media (max-width: 768px) {
+  .create-steps {
+    flex-wrap: wrap;
+  }
+
+  .create-steps li {
+    flex: 1 1 30%;
+  }
+
+  .create-panel {
+    padding: 16px 14px;
+  }
+
+  .create-actions {
+    flex-direction: column-reverse;
+  }
+
+  .create-actions button {
+    width: 100%;
+  }
+
+  .create-summary > div {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .create-summary dt {
+    width: auto;
+  }
+}
