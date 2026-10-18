@@ -443,7 +443,9 @@ if (btnConfirm) {
       canceled: false,
       open: false
     });
-    renderMyGroups(mylistFilter.value, false);
+    // 새 모임이 바로 보이도록 검색 조건을 전체로 되돌린다
+    if (mylistFilter) mylistFilter.value = "";
+    renderMyGroups("", false);
   });
 }
 
