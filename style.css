@@ -617,3 +617,217 @@ select.field-error {
     padding: 14px;
   }
 }
+
+/* ===== 중간시험: 내 모임 목록 (저장/검색/취소) ===== */
+
+#mylist .mylist-intro {
+  font-size: 15px;
+  color: #4a5160;
+}
+
+.mylist-search {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 6px 0 18px;
+}
+
+.mylist-search label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a5160;
+}
+
+.mylist-search select {
+  padding: 9px 12px;
+  font-size: 14px;
+  border: 1px solid #c3cddd;
+  border-radius: 8px;
+  background-color: #ffffff;
+  min-width: 180px;
+}
+
+#btn-mylist-search {
+  background-color: #1e40af;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#btn-mylist-search:hover {
+  background-color: #3b5fd9;
+}
+
+/* 빈 상태 / 결과 없음 안내 */
+.mylist-empty {
+  border: 1px dashed #c3cddd;
+  border-radius: 10px;
+  background-color: #f8faff;
+  padding: 26px 20px;
+  text-align: center;
+  font-size: 15px;
+  color: #4a5160;
+}
+
+.mylist-empty a,
+.link-btn {
+  color: #1e40af;
+  font-weight: 700;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 15px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* 모임 카드 */
+.mygroup-card {
+  border: 1px solid #dbe2f0;
+  border-radius: 10px;
+  padding: 16px 20px;
+  background-color: #f8faff;
+  margin-bottom: 14px;
+}
+
+.mygroup-card.canceled {
+  background-color: #f5f5f6;
+  border-color: #d5d7dd;
+}
+
+.mygroup-card.canceled h3 {
+  color: #8a91a3;
+  text-decoration: line-through;
+}
+
+.mygroup-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.mygroup-head h3 {
+  margin: 0;
+  font-size: 17px;
+  color: #1e40af;
+}
+
+.mygroup-status {
+  flex-shrink: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #166534;
+  background-color: #dcfce7;
+  border: 1px solid #86efac;
+  border-radius: 14px;
+  padding: 3px 10px;
+}
+
+.mygroup-card.canceled .mygroup-status {
+  color: #6b7280;
+  background-color: #e5e7eb;
+  border-color: #d1d5db;
+}
+
+.mygroup-summary {
+  margin: 8px 0 12px;
+  font-size: 14.5px;
+  color: #4a5160;
+}
+
+.mygroup-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mygroup-actions button {
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid #c3cddd;
+  background-color: #ffffff;
+  color: #4a5160;
+}
+
+.mygroup-actions button:hover {
+  background-color: #eef1f7;
+}
+
+.mygroup-actions .btn-cancel-group {
+  color: #b91c1c;
+  border-color: #fca5a5;
+  background-color: #fef2f2;
+}
+
+.mygroup-actions .btn-cancel-group:hover {
+  background-color: #fee2e2;
+}
+
+.mygroup-detail {
+  margin-top: 12px;
+  border-top: 1px dashed #dbe2f0;
+  padding-top: 10px;
+}
+
+.mygroup-detail dl {
+  margin: 0;
+}
+
+.mygroup-detail > dl > div {
+  display: flex;
+  gap: 12px;
+  padding: 5px 0;
+}
+
+.mygroup-detail dt {
+  width: 80px;
+  flex-shrink: 0;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #6b7280;
+}
+
+.mygroup-detail dd {
+  margin: 0;
+  font-size: 14px;
+  word-break: break-word;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .mylist-search {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mylist-search select {
+    width: 100%;
+  }
+
+  #btn-mylist-search {
+    width: 100%;
+  }
+
+  .mygroup-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mygroup-actions button {
+    width: 100%;
+  }
+
+  .mygroup-detail > dl > div {
+    flex-direction: column;
+    gap: 2px;
+  }
+}

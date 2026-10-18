@@ -323,3 +323,129 @@ tabButtons.forEach(function (btn) {
     });
   });
 });
+
+/* ===== 중간시험: 완료한 모임을 목록에 저장하고 다시 보기/검색/취소 =====
+   [7주차에서 추가된 새 행동]
+   1) 개설 확정(5단계 완료) 시 모임이 "내 모임" 목록에 저장된다.
+   2) 과목으로 목록을 찾아본다 → 결과가 없으면 "결과 없음" 안내와 다음 행동을 제공한다.
+   3) 목록에서 모임을 다시 열어 정보를 확인하거나, 취소하여 상태를 되돌린다.
+   [사용자 행동 → 조건 → 반응]
+   - 개설 확정 | click | 4단계에서 개설 확정 | 완료 화면 + 목록에 카드 추가 | 5단계
+   - "찾기" 클릭 | click | 선택한 과목의 모임이 있음 | 해당 카드만 표시 | 목록 갱신
+   - "찾기" 클릭 | click | 선택한 과목의 모임이 없음 | "결과 없음" 안내 + 모임 개설 링크 | 목록 유지
+   - "모임 취소" 클릭 | click | 확인 대화상자에서 확인 | 카드 제거 + 취소 안내 문구 | 목록 갱신
+   - "모임 취소" 클릭 | click | 확인 대화상자에서 취소 | 아무 변화 없음 | 목록 유지
+   - "다시 열기" 클릭 | click | 항목이 접힘 | 상세 정보 펼침/접힘 토글 | 카드 상태 갱신
+   - 목록이 비어 있음 | - | 저장된 모임 0개 | 빈 상태 안내 + 개설 링크 | 초기 화면
+*/
+
+// 저장된 모임 목록 상태 (세션 동안 유지)
+const myGroups = [];
+
+const mylistBox = document.getElementById("mylist-items");
+const mylistFilter = document.getElementById("mylist-filter");
+const btnMylistSearch = document.getElementById("btn-mylist-search");
+
+// 목록 렌더링: filter 값 또는 전체 표시
+function renderMyGroups(filterSubject, showEmptyMessage) {
+  if (!mylistBox) return;
+  mylistBox.innerHTML = "";
+
+  const visible = filterSubject
+    ? myGroups.filter(function (g) { return g.subject === filterSubject; })
+    : myGroups;
+
+  // 목록이 아예 비어 있는 초기 상태
+  if (myGroups.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "mylist-empty";
+    empty.innerHTML = "아직 개설한 모임이 없습니다. <a href='#create'>모임 개설하러 가기</a>";
+    mylistBox.appendChild(empty);
+    return;
+  }
+
+  // 검색 결과가 없는 상태: 다음 행동을 안내한다
+  if (visible.length === 0) {
+    const none = document.createElement("div");
+    none.className = "mylist-empty";
+    none.innerHTML = "'" + filterSubject + "' 과목으로 개설한 모임이 없습니다. <a href='#create'>새로 개설하거나</a>, <button type='button' class='link-btn' id='btn-show-all'>전체 모임 보기</button>로 돌아가세요.";
+    mylistBox.appendChild(none);
+    const showAll = document.getElementById("btn-show-all");
+    if (showAll) {
+      showAll.addEventListener("click", function () {
+        mylistFilter.value = "";
+        renderMyGroups("", false);
+      });
+    }
+    return;
+  }
+
+  visible.forEach(function (g, idx) {
+    const card = document.createElement("article");
+    card.className = "mygroup-card" + (g.canceled ? " canceled" : "");
+    card.innerHTML =
+      "<div class='mygroup-head'>" +
+      "<h3>" + g.title + "</h3>" +
+      "<span class='mygroup-status'>" + (g.canceled ? "취소됨" : "운영 중") + "</span>" +
+      "</div>" +
+      "<p class='mygroup-summary'>" + g.subject + " · " + g.day + "요일 · 인원 " + (g.capacity ? g.capacity + "명" : "미정") + "</p>" +
+      "<div class='mygroup-actions'>" +
+      "<button type='button' class='btn-toggle-detail' data-idx='" + idx + "'>" + (g.open ? "접기" : "자세히 보기") + "</button>" +
+      (g.canceled ? "" : "<button type='button' class='btn-cancel-group' data-idx='" + idx + "'>모임 취소</button>") +
+      "</div>" +
+      "<div class='mygroup-detail' " + (g.open ? "" : "hidden") + ">" +
+      "<dl><div><dt>한 줄 소개</dt><dd>" + g.desc + "</dd></div>" +
+      "<div><dt>주요 과목</dt><dd>" + g.subject + "</dd></div>" +
+      "<div><dt>모임 요일</dt><dd>" + g.day + "요일</dd></div>" +
+      "<div><dt>모집 인원</dt><dd>" + (g.capacity ? g.capacity + "명" : "미정") + "</dd></div></dl>" +
+      "</div>";
+    mylistBox.appendChild(card);
+  });
+
+  // 자세히 보기 토글: 상세 정보 펼침/접힘
+  mylistBox.querySelectorAll(".btn-toggle-detail").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      const i = Number(btn.getAttribute("data-idx"));
+      visible[i].open = !visible[i].open;
+      renderMyGroups(filterSubject, false);
+    });
+  });
+
+  // 모임 취소: 확인 후 상태 변경, 취소 시 되돌리기 제공
+  mylistBox.querySelectorAll(".btn-cancel-group").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      const i = Number(btn.getAttribute("data-idx"));
+      const ok = window.confirm("'" + visible[i].title + "' 모임을 취소할까요? 취소 후 목록에서 상태가 변경됩니다.");
+      if (!ok) return;
+      visible[i].canceled = true;
+      visible[i].open = true;
+      renderMyGroups(filterSubject, false);
+    });
+  });
+}
+
+// 찾기 버튼: 선택한 과목으로 목록 필터링
+if (btnMylistSearch) {
+  btnMylistSearch.addEventListener("click", function () {
+    renderMyGroups(mylistFilter.value, true);
+  });
+}
+
+// 개설 확정 시 목록에 저장하도록 7주차 흐름에 연결
+if (btnConfirm) {
+  btnConfirm.addEventListener("click", function () {
+    myGroups.push({
+      title: createState.title,
+      desc: createState.desc,
+      subject: createState.subject,
+      day: createState.day,
+      capacity: createState.capacity,
+      canceled: false,
+      open: false
+    });
+    renderMyGroups(mylistFilter.value, false);
+  });
+}
+
+// 초기 렌더링
+renderMyGroups("", false);
