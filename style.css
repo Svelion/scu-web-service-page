@@ -22,6 +22,32 @@ header {
   text-align: center;
 }
 
+/* 10주차: 제목과 메뉴 토글 버튼이 함께 놓이는 상단 영역 */
+.header-top {
+  position: relative;
+}
+
+/* 10주차: 모바일 메뉴 토글 버튼 (넓은 화면에서는 숨김) */
+.nav-toggle {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #3b5fd9;
+  color: #ffffff;
+  border: 1px solid #93b4f5;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.nav-toggle[aria-expanded="true"] {
+  background-color: #ffffff;
+  color: #1e40af;
+}
+
 header h1 {
   margin: 0;
   font-size: 32px;
@@ -34,12 +60,15 @@ header > p {
   color: #c7d4f5;
 }
 
-/* 내비게이션 */
-nav {
+/* 내비게이션: 10주차 nav > ul > li 구조 */
+nav .main-nav {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 10px;
   flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 nav a {
@@ -49,10 +78,20 @@ nav a {
   padding: 6px 12px;
   border: 1px solid #93b4f5;
   border-radius: 20px;
+  display: inline-block;
 }
 
 nav a:hover {
   background-color: #3b5fd9;
+}
+
+/* 10주차: 현재 위치 메뉴 강조 (시각적 구분 + aria-current로 상태 전달) */
+nav a.active,
+nav a[aria-current="true"] {
+  background-color: #ffffff;
+  color: #1e40af;
+  font-weight: 700;
+  border-color: #ffffff;
 }
 
 /* 본문 섹션 공통: 콘텐츠 영역 유동 너비 */
@@ -363,18 +402,34 @@ footer a {
   }
 
   header {
-    padding: 24px 16px 20px;
+    padding: 20px 16px 16px;
   }
 
   header h1 {
     font-size: 24px;
   }
 
-  /* 내비게이션 세로 배치 */
-  nav {
+  /* 10주차: 모바일에서 메뉴 토글 버튼 표시, 메뉴는 기본 접힘 */
+  .nav-toggle {
+    display: inline-block;
+  }
+
+  nav .main-nav {
+    display: none;
     flex-direction: column;
-    align-items: center;
-    gap: 8px;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  /* 열림 상태: 버튼 문구·aria-expanded·실제 표시가 함께 변경됨 */
+  nav .main-nav.is-open {
+    display: flex;
+  }
+
+  nav .main-nav li a {
+    display: block;
+    text-align: center;
+    border-radius: 10px;
   }
 
   main {
@@ -970,4 +1025,41 @@ select.field-error {
     flex-direction: column;
     gap: 2px;
   }
+}
+
+/* ===== 10주차: 내 모임 상태 필터 버튼과 결과 수 안내 ===== */
+.mylist-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0 8px;
+}
+
+.filter-btn {
+  background-color: #eef2fb;
+  color: #33415c;
+  border: 1px solid #b9c6e4;
+  border-radius: 18px;
+  padding: 7px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.filter-btn:hover {
+  background-color: #dde6f7;
+}
+
+/* 선택된 필터 버튼: 시각 표시와 aria-pressed가 함께 변경됨 */
+.filter-btn.active,
+.filter-btn[aria-pressed="true"] {
+  background-color: #1e40af;
+  color: #ffffff;
+  border-color: #1e40af;
+  font-weight: 700;
+}
+
+.mylist-count {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: #5a6b8c;
 }

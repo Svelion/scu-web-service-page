@@ -15,6 +15,11 @@
     핵심 행동: 모임 개설 (7주차) - 내 모임 목록 저장/검색/취소 (중간시험) - 가이드 탭 전환 (6주차) - 참여 신청 폼 (9주차)
     정보 순서: 서비스 소개 - 주요 기능 - 이용 방법 - 모임 개설 - 내 모임 - 스터디 가이드 - 참여 신청
 
+    [10주차 내비게이션과 정보구조]
+    메뉴 구조: nav > ul > li 7개 메뉴, 각 메뉴 이름과 목적지(#id) 일치
+    현재 위치: 현재 섹션에 해당하는 메뉴에 aria-current=true + .active 표시 (이동·새로고침·뒤로 가기 후에도 유지)
+    모바일: 좁은 화면에서 "메뉴 열기" 버튼으로 메뉴 펼침/접힘 (aria-expanded 동기화, 목적지 선택 후 자동 닫힘)
+
     [7주차 사용자 흐름: 스터디 모임 개설]
     사용자: 새 스터디 모임이 필요한 대학생
     목표: 나만의 스터디 모임을 개설하는 것
@@ -23,16 +28,23 @@
   -->
 
   <header>
-    <h1>StudyHub</h1>
+    <div class="header-top">
+      <h1>StudyHub</h1>
+      <!-- 10주차: 모바일 메뉴 토글 (aria-expanded가 메뉴 실제 표시 상태와 함께 변경됨) -->
+      <button type="button" id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="main-nav">메뉴 열기</button>
+    </div>
     <p>학생을 위한 스터디 모임 플랫폼</p>
-    <nav>
-      <a href="#intro">서비스 소개</a>
-      <a href="#features">주요 기능</a>
-      <a href="#howto">이용 방법</a>
-      <a href="#create">모임 개설</a>
-      <a href="#mylist">내 모임</a>
-      <a href="#tips">스터디 가이드</a>
-      <a href="#join">참여 신청</a>
+    <!-- 10주차: 메뉴를 nav > ul > li 구조로 구성, 메뉴 이름과 목적지 일치 -->
+    <nav aria-label="주요 메뉴">
+      <ul id="main-nav" class="main-nav">
+        <li><a href="#intro">서비스 소개</a></li>
+        <li><a href="#features">주요 기능</a></li>
+        <li><a href="#howto">이용 방법</a></li>
+        <li><a href="#create">모임 개설</a></li>
+        <li><a href="#mylist">내 모임</a></li>
+        <li><a href="#tips">스터디 가이드</a></li>
+        <li><a href="#join">참여 신청</a></li>
+      </ul>
     </nav>
   </header>
 
@@ -198,7 +210,7 @@
       <div class="mylist-search">
         <label for="mylist-filter">과목으로 찾기</label>
         <select id="mylist-filter">
-          <option value="">전체 모임 보기</option>
+          <option value="">전체 과목</option>
           <option value="자료구조">자료구조</option>
           <option value="데이터베이스">데이터베이스</option>
           <option value="UI/UX프로그래밍">UI/UX프로그래밍</option>
@@ -207,6 +219,15 @@
         </select>
         <button type="button" id="btn-mylist-search">찾기</button>
       </div>
+
+      <!-- 10주차: 상태 필터 버튼 (전체 포함 3가지, aria-pressed로 선택 상태 전달) -->
+      <div class="mylist-filters" role="group" aria-label="모임 상태로 필터">
+        <button type="button" class="filter-btn active" data-status="all" aria-pressed="true">전체</button>
+        <button type="button" class="filter-btn" data-status="active" aria-pressed="false">운영 중</button>
+        <button type="button" class="filter-btn" data-status="canceled" aria-pressed="false">취소됨</button>
+      </div>
+      <!-- 10주차: 현재 표시되는 항목 수 안내 -->
+      <p class="mylist-count" id="mylist-count" aria-live="polite"></p>
 
       <div id="mylist-items" aria-live="polite"></div>
     </section>

@@ -479,21 +479,32 @@ tabButtons.forEach(function (btn) {
 // 저장된 모임 목록 상태 (세션 동안 유지)
 const myGroups = [];
 
+// 10주차: 내 모임 목록의 현재 필터 상태와 요소 (초기 렌더링 전에 준비)
+let currentStatus = "all";
+let currentSubject = "";
+const filterButtons = document.querySelectorAll(".filter-btn");
+const mylistCount = document.getElementById("mylist-count");
+
 const mylistBox = document.getElementById("mylist-items");
 const mylistFilter = document.getElementById("mylist-filter");
 const btnMylistSearch = document.getElementById("btn-mylist-search");
 
-// 목록 렌더링: filter 값 또는 전체 표시
-function renderMyGroups(filterSubject, showEmptyMessage) {
+// 목록 렌더링: 과목 + 상태 필터를 조합해 표시하고, 결과 수를 함께 안내한다 (10주차 개편)
+function renderMyGroups(filterSubject) {
   if (!mylistBox) return;
   mylistBox.innerHTML = "";
 
-  const visible = filterSubject
-    ? myGroups.filter(function (g) { return g.subject === filterSubject; })
-    : myGroups;
+  // 과목 + 상태 필터를 모두 적용한 결과만 계산한다
+  const visible = myGroups.filter(function (g) {
+    if (filterSubject && g.subject !== filterSubject) return false;
+    if (currentStatus === "active" && g.canceled) return false;
+    if (currentStatus === "canceled" && !g.canceled) return false;
+    return true;
+  });
 
-  // 목록이 아예 비어 있는 초기 상태
+  // [전체 목록이 아예 없는 경우] 조건과 무관하게 처음부터 모임이 0개인 상태
   if (myGroups.length === 0) {
+    mylistCount.textContent = "저장된 모임 0개";
     const empty = document.createElement("div");
     empty.className = "mylist-empty";
     empty.innerHTML = "아직 개설한 모임이 없습니다. <a href='#create'>모임 개설하러 가기</a>";
@@ -501,21 +512,33 @@ function renderMyGroups(filterSubject, showEmptyMessage) {
     return;
   }
 
-  // 검색 결과가 없는 상태: 다음 행동을 안내한다
+  // [전체는 있지만 조건에 맞는 결과만 없는 경우] 선택한 필터를 풀면 다시 보인다
   if (visible.length === 0) {
+    const conditions = [];
+    if (filterSubject) conditions.push("'" + filterSubject + "' 과목");
+    if (currentStatus === "active") conditions.push("'운영 중' 상태");
+    if (currentStatus === "canceled") conditions.push("'취소됨' 상태");
+    mylistCount.textContent = "총 " + myGroups.length + "개의 모임 중 0개 표시 중";
     const none = document.createElement("div");
     none.className = "mylist-empty";
-    none.innerHTML = "'" + filterSubject + "' 과목으로 개설한 모임이 없습니다. <a href='#create'>새로 개설하거나</a>, <button type='button' class='link-btn' id='btn-show-all'>전체 모임 보기</button>로 돌아가세요.";
+    none.innerHTML = conditions.join(" + ") + "에 해당하는 모임이 없습니다. <button type='button' class='link-btn' id='btn-show-all'>필터를 전체로 풀기</button>";
     mylistBox.appendChild(none);
     const showAll = document.getElementById("btn-show-all");
     if (showAll) {
       showAll.addEventListener("click", function () {
-        mylistFilter.value = "";
+        // 상태 필터를 '전체'로 되돌린다 (aria-pressed도 함께 갱신)
+        const allBtn = document.querySelector(".filter-btn[data-status='all']");
+        if (allBtn) allBtn.click();
+        if (mylistFilter) mylistFilter.value = "";
+        currentSubject = "";
         renderMyGroups("", false);
       });
     }
     return;
   }
+
+  // 결과 수 안내: 총 저장 개수와 현재 조건으로 보이는 개수를 함께 알려준다
+  mylistCount.textContent = "총 " + myGroups.length + "개의 모임 중 " + visible.length + "개 표시 중";
 
   visible.forEach(function (g, idx) {
     const card = document.createElement("article");
@@ -544,7 +567,7 @@ function renderMyGroups(filterSubject, showEmptyMessage) {
     btn.addEventListener("click", function () {
       const i = Number(btn.getAttribute("data-idx"));
       visible[i].open = !visible[i].open;
-      renderMyGroups(filterSubject, false);
+      renderMyGroups(filterSubject);
     });
   });
 
@@ -556,15 +579,16 @@ function renderMyGroups(filterSubject, showEmptyMessage) {
       if (!ok) return;
       visible[i].canceled = true;
       visible[i].open = true;
-      renderMyGroups(filterSubject, false);
+      renderMyGroups(filterSubject);
     });
   });
 }
 
-// 찾기 버튼: 선택한 과목으로 목록 필터링
+// 찾기 버튼: 선택한 과목으로 목록 필터링 (상태 필터와 조합, 10주차)
 if (btnMylistSearch) {
   btnMylistSearch.addEventListener("click", function () {
-    renderMyGroups(mylistFilter.value, true);
+    currentSubject = mylistFilter.value;
+    renderMyGroups(currentSubject);
   });
 }
 
@@ -582,9 +606,127 @@ if (btnConfirm) {
     });
     // 새 모임이 바로 보이도록 검색 조건을 전체로 되돌린다
     if (mylistFilter) mylistFilter.value = "";
-    renderMyGroups("", false);
+    currentSubject = "";
+    renderMyGroups("");
   });
 }
 
 // 초기 렌더링
 renderMyGroups("", false);
+
+/* ===== 10주차: 내비게이션 UI와 정보 탐색 =====
+   [1] 현재 위치 표시: 현재 섹션에 해당하는 메뉴에 aria-current=true + .active
+       - 메뉴 클릭, 스크롤 이동, 새로고침, 뒤로 가기 모두에서 실제 화면과 일치시킨다
+   [2] 모바일 메뉴: 좁은 화면에서 토글 버튼으로 펼침/접힘
+       - 실제 표시 상태(is-open), 버튼 문구, aria-expanded가 함께 변경된다
+       - 목적지를 선택하면 이동 후 메뉴가 닫힌다
+   [3] 내 모임 상태 필터: 전체 / 운영 중 / 취소됨 3가지 버튼
+       - aria-pressed와 버튼 표시가 함께 변경되고, 결과 수와 빈 결과 안내가 조건과 일치한다
+*/
+
+const navLinks = Array.from(document.querySelectorAll("#main-nav a"));
+const navToggle = document.getElementById("nav-toggle");
+const mainNav = document.getElementById("main-nav");
+
+// 현재 위치 갱신: 해시(주소)와 화면 위치를 기준으로 메뉴 하나만 강조한다
+function setCurrentMenu(hash) {
+  const target = (hash || "#intro").replace("#", "");
+  const section = document.getElementById(target);
+  // 해시가 메뉴 섹션이 아니면(예: 내부 탭) 위치 판단을 스크롤에 맡긴다
+  const base = section ? target : findSectionInView();
+  navLinks.forEach(function (link) {
+    const isCurrent = link.getAttribute("href") === "#" + base;
+    link.classList.toggle("active", isCurrent);
+    if (isCurrent) {
+      link.setAttribute("aria-current", "true");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+}
+
+// 화면에 보이는 섹션 찾기 (스크롤 위치 기준)
+function findSectionInView() {
+  const ids = ["intro", "features", "howto", "create", "mylist", "tips", "join"];
+  let current = "intro";
+  ids.forEach(function (id) {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 120) current = id;
+  });
+  return current;
+}
+
+// 스크롤로 섹션이 바뀌면 현재 위치 메뉴를 함께 갱신 (아직 해시와 다를 때만)
+let lastHash = "";
+window.addEventListener("scroll", function () {
+  const hash = location.hash || "#intro";
+  const inView = findSectionInView();
+  if (hash !== "#" + inView && lastHash !== "scroll:" + inView) {
+    setCurrentMenu("#" + inView);
+  }
+}, { passive: true });
+
+// 메뉴 클릭: 주소 해시와 현재 위치 표시를 함께 갱신하고 모바일 메뉴를 닫는다
+navLinks.forEach(function (link) {
+  link.addEventListener("click", function () {
+    const hash = link.getAttribute("href");
+    setCurrentMenu(hash);
+    closeMobileMenu();
+  });
+});
+
+// 새로고침·뒤로 가기·앞으로 가기 이후에도 주소 해시 기준으로 현재 위치를 맞춘다
+window.addEventListener("hashchange", function () {
+  setCurrentMenu(location.hash);
+});
+window.addEventListener("load", function () {
+  setCurrentMenu(location.hash);
+});
+setCurrentMenu(location.hash);
+
+// 모바일 메뉴: 실제 표시 상태, 버튼 문구, aria-expanded를 함께 변경한다
+function openMobileMenu() {
+  mainNav.classList.add("is-open");
+  navToggle.setAttribute("aria-expanded", "true");
+  navToggle.textContent = "메뉴 닫기";
+}
+
+function closeMobileMenu() {
+  mainNav.classList.remove("is-open");
+  navToggle.setAttribute("aria-expanded", "false");
+  navToggle.textContent = "메뉴 열기";
+}
+
+navToggle.addEventListener("click", function () {
+  if (mainNav.classList.contains("is-open")) {
+    closeMobileMenu();
+  } else {
+    openMobileMenu();
+  }
+});
+
+// 화면 폭이 넓어지면 접힘 상태를 초기화해 주요 메뉴가 항상 보이게 한다
+window.addEventListener("resize", function () {
+  if (window.innerWidth > 768) closeMobileMenu();
+});
+
+// 내 모임 상태 필터: 버튼 선택 표시(aria-pressed)와 목록 결과를 함께 변경한다
+filterButtons.forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    currentStatus = btn.getAttribute("data-status");
+    filterButtons.forEach(function (b) {
+      const selected = b === btn;
+      b.classList.toggle("active", selected);
+      b.setAttribute("aria-pressed", selected ? "true" : "false");
+    });
+    renderMyGroups(currentSubject, true);
+  });
+});
+
+// 과목 검색(찾기 버튼)도 상태 필터와 조합되어 동작하도록 연결
+if (btnMylistSearch) {
+  btnMylistSearch.addEventListener("click", function () {
+    currentSubject = mylistFilter.value;
+    renderMyGroups(currentSubject, true);
+  });
+}
