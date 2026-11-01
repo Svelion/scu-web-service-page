@@ -202,6 +202,146 @@ form button.submitted {
   border: 1px solid #fca5a5;
 }
 
+/* ===== 9주차: 폼 UI와 입력 경험 설계 ===== */
+.join-intro {
+  margin: 0 0 18px;
+  font-size: 14.5px;
+  color: #4b5563;
+}
+
+#join-form {
+  max-width: 560px;
+}
+
+.join-field {
+  margin-bottom: 18px;
+}
+
+.join-field label {
+  display: block;
+  font-weight: 700;
+  font-size: 14.5px;
+  margin-bottom: 6px;
+}
+
+.join-field .req {
+  color: #b91c1c;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.join-field input[type="text"],
+.join-field input[type="email"],
+.join-field select,
+.join-field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 15px;
+  border: 1px solid #c3cddd;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.join-field input:focus,
+.join-field select:focus,
+.join-field textarea:focus {
+  outline: 2px solid #3b5fd9;
+}
+
+.join-field textarea {
+  resize: vertical;
+}
+
+.check-line {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600 !important;
+  cursor: pointer;
+}
+
+.check-line input {
+  width: 18px;
+  height: 18px;
+}
+
+/* 조건부 입력 영역: 체크 시 나타나는 박스 */
+.conditional-box {
+  margin-top: 12px;
+  padding: 14px;
+  border: 1px dashed #93a5d0;
+  border-radius: 10px;
+  background-color: #f4f7ff;
+}
+
+/* 도움말: 입력 전 안내 (회색) */
+.field-help {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* 오류 문구: 무엇을 어떻게 고쳐야 하는지 문구로 안내 (빨강) */
+.field-error-msg {
+  margin: 6px 0 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #b91c1c;
+}
+
+/* 글자 수 실시간 카운터 */
+.char-count {
+  margin: 6px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #b45309;
+}
+
+.char-count.count-ok {
+  color: #15803d;
+}
+
+/* 제출 중/완료 버튼 상태 */
+form button.submitting {
+  background-color: #64748b;
+  cursor: wait;
+}
+
+form button#join-reset {
+  background-color: #eef2fb;
+  color: #1e40af;
+  border: 1px solid #c3cddd;
+  margin-left: 10px;
+}
+
+form button#join-reset:hover {
+  background-color: #dde6f9;
+}
+
+/* 모바일 반응형: 9주차 참여 신청 폼 */
+@media (max-width: 768px) {
+  #join-form {
+    max-width: 100%;
+  }
+
+  .join-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  form button#join-reset {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  form button#join-submit {
+    width: 100%;
+  }
+}
+
 /* 푸터 */
 footer {
   background-color: #23263a;

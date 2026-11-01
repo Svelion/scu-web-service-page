@@ -1,66 +1,58 @@
-// 5주차: 사용자 행동에 반응하는 웹페이지 (스터디 참여 신청 폼)
+// 9주차: 폼 UI와 입력 경험 설계 (참여 신청 폼 전면 개편)
+/*
+  [입력 조건]
+  - 이름: 필수
+  - 학교 이메일: 필수 + 이메일 형식
+  - 관심 과목: 필수 선택
+  - 참여 동기: 필수 + 10자 이상 (입력 중 글자 수 실시간 표시)
+  - 화상 도구: "온라인 참여" 체크 시에만 표시/활성화되고 그때는 필수
+  [제출 처리]
+  - submit 이벤트로 처리, 조건 미충족 시 제출 차단 + 첫 오류 항목으로 포커스
+  - 제출 중에는 진행 문구 표시 + 버튼 비활성화(중복 제출 방지)
+  - 성공 시 브라우저(localStorage)에 저장하고 완료 안내, 실패 시 입력 유지 + 다시 시도
+*/
 
 // 1. 필요한 HTML 요소 선택
-const subscribeForm = document.querySelector("#join form");
-const nameInput = document.querySelector("#student-name");
-const emailInput = document.querySelector("#student-email");
-const submitButton = subscribeForm ? subscribeForm.querySelector("button[type=submit]") : null;
-const messageBox = document.createElement("p");
-messageBox.setAttribute("id", "join-message");
-messageBox.setAttribute("role", "status");
+const joinForm = document.getElementById("join-form");
+const nameInput = document.getElementById("student-name");
+const emailInput = document.getElementById("student-email");
+const goalSelect = document.getElementById("student-goal");
+const motiveInput = document.getElementById("student-motive");
+const motiveCount = document.getElementById("count-motive");
+const onlineCheck = document.getElementById("online-check");
+const onlineExtra = document.getElementById("online-extra");
+const onlineTool = document.getElementById("online-tool");
+const submitButton = document.getElementById("join-submit");
+const resetButton = document.getElementById("join-reset");
+const messageBox = document.getElementById("join-message");
 
-// 안내 문구를 표시할 영역을 폼 아래에 추가
-if (subscribeForm && submitButton) {
-  subscribeForm.appendChild(messageBox);
-}
+const MOTIVE_MIN = 10;
 
-// 2. 폼 제출 시 함수 실행 연결
-if (subscribeForm) {
-  subscribeForm.addEventListener("submit", handleJoinSubmit);
-}
-
-// 입력값이 바뀌면 이전 안내 상태를 초기화
-if (emailInput) {
-  emailInput.addEventListener("input", resetJoinMessage);
-}
-
-function handleJoinSubmit(event) {
-  // 5주차: 제출 직후 새로고침 방지
-  event.preventDefault();
-
-  const name = nameInput ? nameInput.value.trim() : "";
-  const email = emailInput ? emailInput.value.trim() : "";
-
-  // 3. 입력값에 따라 다른 안내 문구 표시 (조건문 + 함수)
-  if (name === "") {
-    showJoinMessage("이름을 입력해 주세요.", "warn");
-    return;
+// 필드별 오류 문구 표시/해제 (색상 + 문구로 상태 구분)
+function setFieldError(id, text) {
+  const box = document.getElementById("error-" + id);
+  const input = document.getElementById("student-" + id) || document.getElementById(id);
+  if (box) {
+    box.textContent = text;
+    box.hidden = false;
   }
-
-  if (email === "" || !email.endsWith("@") && email.indexOf("@") < 1) {
-    showJoinMessage("학교 이메일을 입력해 주세요.", "warn");
-    return;
-  }
-
-  if (!isValidEmail(email)) {
-    showJoinMessage("올바른 이메일 형식이 아닙니다. 예: student@university.ac.kr", "warn");
-    return;
-  }
-
-  // 4. 처리 결과에 따라 문구 스타일과 버튼 상태 변경
-  showJoinMessage(name + "님, 스터디 참여 신청이 완료되었습니다. (" + email + ")", "ok");
-  submitButton.textContent = "신청 완료";
-  submitButton.disabled = true;
-  submitButton.classList.add("submitted");
+  if (input) input.classList.add("field-error");
 }
 
-function resetJoinMessage() {
-  if (!submitButton.disabled) return;
-  submitButton.disabled = false;
-  submitButton.textContent = "스터디 참여 신청하기";
-  submitButton.classList.remove("submitted");
-  messageBox.textContent = "";
-  messageBox.className = "";
+function clearFieldError(id) {
+  const box = document.getElementById("error-" + id);
+  const input = document.getElementById("student-" + id) || document.getElementById(id);
+  if (box) {
+    box.textContent = "";
+    box.hidden = true;
+  }
+  if (input) input.classList.remove("field-error");
+}
+
+function showJoinMessage(text, type) {
+  messageBox.textContent = text;
+  messageBox.className = type === "ok" ? "message-ok" : "message-warn";
+  messageBox.hidden = false;
 }
 
 // 간단한 이메일 형식 검사 함수
@@ -69,10 +61,155 @@ function isValidEmail(email) {
   return pattern.test(email);
 }
 
-// 안내 문구를 화면에 표시하는 함수
-function showJoinMessage(text, type) {
-  messageBox.textContent = text;
-  messageBox.className = type === "ok" ? "message-ok" : "message-warn";
+// 2. 입력 중 피드백: 참여 동기 글자 수를 실시간으로 표시하고 조건 충족 여부를 문구로 알린다
+function updateMotiveCount() {
+  const len = motiveInput.value.trim().length;
+  if (len >= MOTIVE_MIN) {
+    motiveCount.textContent = len + " / " + MOTIVE_MIN + "자 - 조건을 충족했어요";
+    motiveCount.classList.add("count-ok");
+    clearFieldError("motive");
+  } else {
+    motiveCount.textContent = len + " / " + MOTIVE_MIN + "자 - 아직 부족해요";
+    motiveCount.classList.remove("count-ok");
+  }
+}
+
+// 3. 조건부 입력: 온라인 참여 체크에 따라 추가 영역 표시/숨김 + 활성/비활성 함께 변경
+function syncOnlineExtra() {
+  if (onlineCheck.checked) {
+    onlineExtra.hidden = false;
+    onlineTool.disabled = false;
+  } else {
+    onlineExtra.hidden = true;
+    onlineTool.disabled = true;
+    onlineTool.value = "";
+    clearFieldError("tool");
+  }
+}
+
+// 4. 필드별 입력 이벤트: 오류가 해제되는 즉시 화면에 반영
+if (nameInput) {
+  nameInput.addEventListener("input", function () {
+    if (nameInput.value.trim() !== "") clearFieldError("name");
+  });
+}
+if (emailInput) {
+  emailInput.addEventListener("input", function () {
+    if (isValidEmail(emailInput.value.trim())) clearFieldError("email");
+  });
+}
+if (goalSelect) {
+  goalSelect.addEventListener("change", function () {
+    if (goalSelect.value !== "") clearFieldError("goal");
+  });
+}
+if (motiveInput) {
+  motiveInput.addEventListener("input", updateMotiveCount);
+}
+if (onlineCheck) {
+  onlineCheck.addEventListener("change", syncOnlineExtra);
+}
+
+// 5. 폼 제출: submit 이벤트로 처리
+if (joinForm) {
+  joinForm.addEventListener("submit", function (event) {
+    event.preventDefault(); // 제출 중 새로고침 방지
+
+    // 제출 중에는 중복 제출을 막는다
+    if (submitButton.disabled) return;
+
+    ["name", "email", "goal", "motive", "tool"].forEach(clearFieldError);
+
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const goal = goalSelect.value;
+    const motive = motiveInput.value.trim();
+
+    // 조건 미충족 항목을 모두 표시하고 첫 오류 항목으로 포커스를 이동한다
+    let firstBad = null;
+    if (name === "") {
+      setFieldError("name", "이름이 비어 있습니다. 위 입력창에 실명을 적어 주세요.");
+      firstBad = firstBad || nameInput;
+    }
+    if (email === "") {
+      setFieldError("email", "학교 이메일이 비어 있습니다. 예: student@university.ac.kr");
+      firstBad = firstBad || emailInput;
+    } else if (!isValidEmail(email)) {
+      setFieldError("email", "이메일 형식이 아닙니다. @와 .이 포함된 주소로 고쳐 주세요.");
+      firstBad = firstBad || emailInput;
+    }
+    if (goal === "") {
+      setFieldError("goal", "관심 과목이 선택되지 않았습니다. 목록에서 과목을 골라 주세요.");
+      firstBad = firstBad || goalSelect;
+    }
+    if (motive.length < MOTIVE_MIN) {
+      setFieldError("motive", "참여 동기가 " + MOTIVE_MIN + "자보다 짧습니다. " + (MOTIVE_MIN - motive.length) + "자 더 적어 주세요.");
+      firstBad = firstBad || motiveInput;
+    }
+    if (onlineCheck.checked && onlineTool.value === "") {
+      setFieldError("tool", "화상 도구가 선택되지 않았습니다. 온라인 진행에 쓸 도구를 골라 주세요.");
+      firstBad = firstBad || onlineTool;
+    }
+
+    if (firstBad) {
+      showJoinMessage("신청서를 아직 저장할 수 없어요. 붉은 안내가 표시된 항목을 수정해 주세요.", "warn");
+      firstBad.focus();
+      return; // 조건 미충족: 제출 차단
+    }
+
+    // 제출 중: 진행 문구 표시 + 버튼 비활성화로 중복 제출 방지
+    submitButton.disabled = true;
+    submitButton.textContent = "저장하는 중...";
+    submitButton.classList.add("submitting");
+    showJoinMessage("신청서를 저장하는 중입니다. 잠시만 기다려 주세요.", "warn");
+
+    // 서버 연동 대신 브라우저 저장(localStorage)을 사용한다
+    setTimeout(function () {
+      try {
+        const store = JSON.parse(localStorage.getItem("joinApplications") || "[]");
+        store.push({
+          name: name,
+          email: email,
+          goal: goal,
+          motive: motive,
+          online: onlineCheck.checked,
+          tool: onlineCheck.checked ? onlineTool.value : "",
+          savedAt: new Date().toISOString()
+        });
+        localStorage.setItem("joinApplications", JSON.stringify(store));
+
+        // 성공: 완료 안내 표시
+        showJoinMessage(name + "님, 참여 신청이 완료되었습니다! (" + goal + " / 저장된 신청 " + store.length + "건)", "ok");
+        submitButton.textContent = "신청 완료";
+        submitButton.classList.remove("submitting");
+        submitButton.classList.add("submitted");
+      } catch (err) {
+        // 실패: 입력 내용을 유지한 상태에서 다시 시도할 수 있게 한다
+        showJoinMessage("저장에 실패했습니다. 입력 내용은 그대로 남아 있으니 다시 시도 버튼을 눌러 주세요.", "warn");
+        submitButton.disabled = false;
+        submitButton.textContent = "다시 시도하기";
+        submitButton.classList.remove("submitting");
+      }
+    }, 800);
+  });
+}
+
+// 6. 다시 작성: 입력값, 안내 문구, 버튼 상태를 모두 초기화
+if (resetButton) {
+  resetButton.addEventListener("click", function () {
+    joinForm.reset();
+    ["name", "email", "goal", "motive", "tool"].forEach(clearFieldError);
+    syncOnlineExtra(); // 체크 해제 상태로 조건부 영역도 초기화
+    updateMotiveCount();
+    messageBox.hidden = true;
+    messageBox.textContent = "";
+    messageBox.className = "";
+    submitButton.disabled = false;
+    submitButton.textContent = "스터디 참여 신청하기";
+    submitButton.classList.remove("submitting");
+    submitButton.classList.remove("submitted");
+    nameInput.focus();
+  });
 }
 
 /* ===== 7주차: 사용자 흐름과 인터랙션 시나리오 구현 (스터디 모임 개설) =====
