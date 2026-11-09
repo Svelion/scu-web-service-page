@@ -8,6 +8,8 @@
   <script src="script.js" defer></script>
 </head>
 <body>
+  <!-- 11주차: 키보드 사용자를 위한 본문 바로가기 링크 (Tab 첫 번째 요소, 포커스 시에만 표시) -->
+  <a class="skip-link" href="#main-content">본문 바로가기</a>
   <!--
     [정보 설계]
     사용자: 대학생, 시험 기간에 함께 공부할 동료를 찾는 학습자
@@ -48,7 +50,7 @@
     </nav>
   </header>
 
-  <main>
+  <main id="main-content" tabindex="-1">
     <section id="intro">
       <h2>서비스 소개</h2>
       <p>

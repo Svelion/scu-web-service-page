@@ -1,3 +1,66 @@
+/* ===== 11주차: 웹 접근성과 포용적 인터페이스 개선 ===== */
+
+/* 11주차-3. 키보드 접근: 모든 조작 요소에 키보드 초점 표시
+   (마우스 클릭에는 적용되지 않고 Tab 이동 시에만 보이는 :focus-visible 사용) */
+:focus-visible {
+  outline: 3px solid #d97706;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* 11주차-3. 본문 바로가기(skip) 링크: Tab 첫 이동 시에만 화면에 나타남 */
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -48px;
+  z-index: 100;
+  background-color: #1e40af;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 0 0 10px 10px;
+  text-decoration: none;
+  transition: top 0.15s ease-out;
+}
+
+.skip-link:focus-visible,
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid #d97706;
+}
+
+/* 11주차-1. 상태를 색만이 아닌 기호로 함께 전달
+   (오류 문구 앞에 ⚠ 기호를 붙여 색을 구별하기 어려운 사용자도 상태를 알 수 있게 함) */
+.field-error-msg::before {
+  content: "⚠ ";
+  font-weight: 700;
+}
+
+/* 11주차-1. 안내 문구 앞에 ℹ 기호 (도움말임을 색 외에 기호로 구분) */
+.field-help::before {
+  content: "ℹ ";
+}
+
+/* 11주차-1. 제출 결과 안내에도 기호로 성공/주의를 함께 전달 */
+#join-message.message-ok::before {
+  content: "✅ ";
+}
+
+#join-message.message-warn::before {
+  content: "⚠ ";
+}
+
+/* 오류가 있는 입력창에는 시각적 표시(굵은 붉은 테두리)와 함께
+   필수 수정 상태임을 테두리 두께로도 강화 */
+.field-error input,
+.field-error select,
+input.field-error,
+select.field-error {
+  border-width: 2px;
+  font-weight: 600;
+}
+
 /* ===== 3주차: CSS로 웹페이지 디자인하기 ===== */
 
 /* 기본 설정 */
@@ -57,7 +120,8 @@ header h1 {
 header > p {
   margin: 8px 0 16px;
   font-size: 15px;
-  color: #c7d4f5;
+  /* 11주차-2. 색 대비 개선: #c7d4f5(대비 약 4:1) → #dbe6ff(대비 약 7:1) */
+  color: #dbe6ff;
 }
 
 /* 내비게이션: 10주차 nav > ul > li 구조 */
@@ -315,11 +379,12 @@ form button.submitted {
   background-color: #f4f7ff;
 }
 
-/* 도움말: 입력 전 안내 (회색) */
+/* 도움말: 입력 전 안내 (회색)
+   11주차-2. 색 대비 개선: #6b7280 → #57647a (흰 배경 대비 약 5.5:1) */
 .field-help {
   margin: 6px 0 0;
   font-size: 13px;
-  color: #6b7280;
+  color: #57647a;
 }
 
 /* 오류 문구: 무엇을 어떻게 고쳐야 하는지 문구로 안내 (빨강) */
@@ -484,7 +549,8 @@ footer a {
   text-align: center;
   font-size: 13px;
   font-weight: 600;
-  color: #8a91a3;
+  /* 11주차-2. 색 대비 개선: #8a91a3 → #666d80 (연한 배경 대비 약 4.6:1) */
+  color: #666d80;
   background-color: #eef1f7;
   border: 1px solid #dbe2f0;
   border-radius: 20px;
@@ -633,7 +699,8 @@ select.field-error {
 .create-hint {
   margin: 14px 0 0;
   font-size: 13px;
-  color: #6b7280;
+  /* 11주차-2. 색 대비 개선: #6b7280 → #57647a */
+  color: #57647a;
 }
 
 /* 버튼 영역: 이전 / 다음 */
@@ -896,7 +963,8 @@ select.field-error {
 }
 
 .mygroup-card.canceled h3 {
-  color: #8a91a3;
+  /* 11주차-2. 색 대비 개선: #8a91a3 → #666d80 */
+  color: #666d80;
   text-decoration: line-through;
 }
 
@@ -1061,5 +1129,6 @@ select.field-error {
 .mylist-count {
   margin: 0 0 12px;
   font-size: 13px;
-  color: #5a6b8c;
+  /* 11주차-2. 색 대비 개선: #5a6b8c → #44507a (연한 배경 대비 강화) */
+  color: #44507a;
 }
